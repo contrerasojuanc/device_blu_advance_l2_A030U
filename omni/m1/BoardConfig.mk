@@ -1,0 +1,114 @@
+# inherit from the proprietary version
+-include vendor/mediatek/mt6580/BoardConfigVendor.mk
+
+LOCAL_PATH := device/omni/m1
+
+# Board
+TARGET_BOARD_PLATFORM := m1
+TARGET_CPU_ABI := armeabi-v7a
+TARGET_CPU_ABI2 := armeabi
+ARCH_ARM_HAVE_VFP := true
+TARGET_CPU_SMP := true
+TARGET_ARCH := arm
+ARCH_ARM_HAVE_NEON := true
+TARGET_NO_BOOTLOADER := true
+TARGET_ARCH_VARIANT := armv7-a-neon
+TARGET_ARCH_VARIANT_CPU := cortex-a7
+TARGET_CPU_VARIANT := cortex-a7
+TARGET_CPU_MEMCPY_OPT_DISABLE := true
+
+# Enable dex-preoptimization
+WITH_DEXPREOPT := false
+DONT_DEXPREOPT_PREBUILTS := true
+
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME := m1
+
+TARGET_USERIMAGES_USE_EXT4 :=true
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+
+# Assert
+TARGET_OTA_ASSERT_DEVICE := aurora,mt6580
+
+# MTK HARDWARE
+BOARD_HAS_MTK_HARDWARE := true
+MTK_HARDWARE := true
+BOARD_USES_LEGACY_MTK_AV_BLOB := true
+COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE -DADD_LEGACY_ACQUIRE_BUFFER_SYMBOL
+COMMON_GLOBAL_CPPFLAGS += -DMTK_HARDWARE
+BLOCK_BASED_OTA := false
+
+BOARD_CONNECTIVITY_VENDOR := MediaTek
+BOARD_CONNECTIVITY_MODULE := conn_soc
+
+# Partitions & Image
+BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 16777216
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1946157056
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 838860800
+BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
+BOARD_CACHEIMAGE_TYPE := ext4
+BOARD_FLASH_BLOCK_SIZE := 131072
+
+# Flags
+TARGET_GLOBAL_CFLAGS   += -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
+
+TARGET_KMODULES := true
+
+COMMON_GLOBAL_CFLAGS += -DDISABLE_HW_ID_MATCH_CHECK
+TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+
+# Kernel 
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32S1,32S1
+BOARD_KERNEL_BASE := 0x80000000
+BOARD_KERNEL_PAGESIZE := 2048
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
+BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x04000000 --tags_offset 0x0e000000
+BOARD_CUSTOM_BOOTIMG := false
+
+# TWRP
+TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
+BOARD_HAS_NO_SELECT_BUTTON := true
+#TW_USE_KEY_CODE_TOUCH_SYNC := 330
+#TW_NO_REBOOT_BOOTLOADER := true
+#TARGET_RECOVERY_FSTAB := device/omni/m1/recovery.fstab
+TARGET_RECOVERY_DEVICE_DIRS += device/omni/m1
+PRODUCT_COPY_FILES += $(LOCAL_PATH)/twrp.fstab:recovery/root/etc/twrp.fstab
+TW_THEME := portrait_mdpi
+TW_DEFAULT_EXTERNAL_STORAGE := true
+#TW_USE_TOOLBOX := true
+RECOVERY_SDCARD_ON_DATA := true
+TW_INTERNAL_STORAGE_PATH := "/data/media"
+TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
+#TW_NEVER_UNMOUNT_SYSTEM := true
+#TW_INPUT_BLACKLIST := "ACCDET\x0ahwmdata\0amtk-tpd-kpd"
+#TW_WHITELIST_INPUT := "mtk-tpd"
+#TWRP_EVENT_LOGGING := true
+#TW_CRYPTO_FS_TYPE := "ext4"
+#TW_CRYPTO_REAL_BLKDEV := "/dev/block/mmcblk0p8"
+#TW_CRYPTO_MNT_POINT := "/data"
+#TW_CRYPTO_FS_OPTIONS := "nosuid,nodev,noatime,discard,noauto_da_alloc,data=ordered"
+TW_NO_USB_STORAGE := true
+TW_EXCLUDE_SUPERSU := true
+TW_INCLUDE_FB2PNG := true
+TW_CUSTOM_CPU_TEMP_PATH := /sys/class/thermal/thermal_zone1/temp
+TW_EXTRA_LANGUAGES := true
+TW_BUILD_ZH_CN_SUPPORT := true
+
+# Sensors
+TARGET_NO_SENSOR_PERMISSION_CHECK := true
+
+# Offline charging
+BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/BOOT/BOOT/boot/boot_mode
+BOARD_CHARGER_ENABLE_SUSPEND := true
+BOARD_CHARGER_DISABLE_INIT_BLANK := true
+
+# Disable memcpy opt (for audio libraries)
+TARGET_CPU_MEMCPY_OPT_DISABLE := true
+
+# Enable Minikin text layout engine (will be the default soon)
+USE_MINIKIN := true
+
+# Hack for building without kernel sources
+$(shell mkdir -p $(OUT)/obj/KERNEL_OBJ/usr)
